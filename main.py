@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
 client = discord.Client(intents=intents)
 
@@ -46,10 +47,30 @@ async def on_message(message):
         server = message.guild.id
         if eligible_to_roll(str(author), server):
             instructordata = lookup_instructor_by_id(random_number)
-            await message.channel.send(instructordata[1])
+            await message.channel.send(instructordata[1].replace("\n", ""))
             await message.channel.send("Member of the " + str(instructordata[2]) + " department")
         else:
             await message.channel.send("You have reached ur maximum rolls for the hour with 7 rolls. Next roll reset is at: (figure out how to do roll resets later)")
+
+    #Used to roll
+    if message.content.startswith('$$collection'):
+        request = message.content
+        user_id = ""
+        for i in range(15, len(request)-1):
+            user_id += request[i]
+
+        server = message.guild
+        mentioneduser = None
+        for member in server.members:
+            if str(member.id) == str(user_id):
+                mentioneduser = member
+                await message.channel.send(f"**{member.mention}'s collection: **")
+        all_instructors = collection(str(mentioneduser))
+
+        string_all_instructors = ""
+        for i in all_instructors:
+            string_all_instructors = string_all_instructors.replace("\n", "") + "\n- " + i + "\n"
+        await message.channel.send(string_all_instructors)
 
 @client.event
 #Used to claim

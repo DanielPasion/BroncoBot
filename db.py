@@ -123,3 +123,25 @@ def claim(discordusername, discordserver, instructor):
     mydb.commit()
 
     return True
+
+#Used to claim
+def collection(discordusername):
+    # Connecting to DB
+    cursor = mydb.cursor()
+    cursor.execute("USE BroncoBot")
+
+    #Get the instructor ID
+    query = "SELECT instructorID FROM Claims WHERE discordusername= '" + discordusername + "'"
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    print(result)
+    #Get the names of all the instructors
+    allinstructors = []
+    for id in result:
+        query = "SELECT name FROM Instructors WHERE instructorID = %s"
+        cursor.execute(query,id)
+        result = cursor.fetchone()[0]
+        allinstructors.append(result)
+
+    return allinstructors
