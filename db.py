@@ -107,7 +107,7 @@ def eligible_to_roll(discordusername, discordserver):
         mydb2.commit()
         mydb2.close()
         return True
-    elif result[2] == 1:
+    elif result[2] == 0:
         return False
     else:
         rolls = result[2] + 1

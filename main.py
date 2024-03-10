@@ -26,7 +26,7 @@ async def on_message(message):
         help_message = """Welcome to Bronco Bot! If you have any other questions, please contact .thedaniel on discord. Here are a list of commands you can do:
 
         $$help: Send a list of commands
-        $$gamble: Randomly generate an instrcutor at CPP. To claim, react to the NAME OF THE PERSON (not the image) (2 rolls per hour, rolls reset every hour,no claim cooldown)
+        $$gamble: Randomly generate an instrcutor at CPP. To claim, react to the NAME OF THE PERSON (not the image) (1 roll per hour, rolls reset every hour,no claim cooldown)
         $$collection @user: Displays the collection of a user
         $$lookup 'instructor': Looks up if a specific person is in the database"""
         await message.channel.send(help_message)
@@ -65,7 +65,7 @@ async def on_message(message):
             if ifclaimed(instructordata[1]) != False:
                 await message.channel.send("Instructor is claimed by: " + ifclaimed(instructordata[1])[0])
         else:
-            await message.channel.send("You have reached ur maximum rolls for the hour with 3 rolls. Rolls reset at the :45 minute mark every hour!")
+            await message.channel.send("You have reached ur maximum rolls for the hour with 1 roll. Rolls reset at the :45 minute mark every hour!")
 
     #Used to roll
     if message.content.startswith('$$collection'):
