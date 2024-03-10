@@ -74,7 +74,7 @@ def lookup_instructor_by_id(id):
 
     result = cursor.fetchall()
 
-    return result[0][1] + ", a hard working member of the " + result[0][2] + " department"
+    return result[0]
 
 #Looks up instructor for the $$instructor command
 def eligible_to_roll(discordusername, discordserver):
@@ -105,3 +105,21 @@ def eligible_to_roll(discordusername, discordserver):
         mydb.commit()
         return True
     
+#Used to claim
+def claim(discordusername, discordserver, instructor):
+    # Connecting to DB
+    cursor = mydb.cursor()
+    cursor.execute("USE BroncoBot")
+
+    #Get the instructor ID
+    getID = "SELECT instructorID FROM Instructors WHERE name = '" + instructor + "'"
+    cursor.execute(getID)
+    instructorID = cursor.fetchone()[0]
+
+    # Creating Insert Query but checking to see if they've been claimed first
+    query = "INSERT INTO Claims (discordusername, discordserver, instructorID) VALUES (%s, %s, %s)"
+    values = (discordusername, discordserver, instructorID)
+    cursor.execute(query, values)
+    mydb.commit()
+
+    return True

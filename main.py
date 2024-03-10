@@ -45,7 +45,9 @@ async def on_message(message):
         author = message.author
         server = message.guild.id
         if eligible_to_roll(str(author), server):
-            await message.channel.send(lookup_instructor_by_id(random_number))
+            instructordata = lookup_instructor_by_id(random_number)
+            await message.channel.send(instructordata[1])
+            await message.channel.send("Member of the " + str(instructordata[2]) + " department")
         else:
             await message.channel.send("You have reached ur maximum rolls for the hour with 7 rolls. Next roll reset is at: (figure out how to do roll resets later)")
 
@@ -71,7 +73,10 @@ async def on_reaction_add(reaction, user):
         await reaction.message.channel.send(f"You're too slow {mention}, you missed the 10 second window mark and reacted to the message in: " + str(time_difference))
 
     else:
-        print()
+        print("Here")
+        mention = user.mention
+        claim(str(user),str(reaction.message.guild.id),str(reaction.message.content))
+        await reaction.message.channel.send(f"{mention}, you are now the proud owner of **{reaction.message.content}!!!**")
     
 
 
