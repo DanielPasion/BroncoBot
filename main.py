@@ -32,7 +32,19 @@ async def on_message(message):
         instructor = ""
         for i in range(9, len(request)):
             instructor += request[i]
-        await message.channel.send(lookup_instructor(instructor))
+        await message.channel.send(lookup_instructor_by_name(instructor))
+
+    if message.content.startswith('$$gamble'):
+        request = message.content
+        random_number = random.randint(1, 1562)
+
+        author = message.author
+        server = message.guild.id
+        print(server)
+        if eligible_to_roll(str(author), server):
+            await message.channel.send(lookup_instructor_by_id(random_number))
+        else:
+            await message.channel.send("You have reached ur maximum rolls for the hour with 7 rolls. Next roll reset is at: (figure out how to do roll resets later)")
 
 
 
