@@ -2,6 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from db import *
+from PhotoSearchScraper import *
 from datetime import datetime, timedelta
 
 intents = discord.Intents.default()
@@ -37,6 +38,7 @@ async def on_message(message):
         for i in range(9, len(request)):
             instructor += request[i]
         await message.channel.send(lookup_instructor_by_name(instructor))
+        await message.channel.send(file=discord.File(lookup_instructor(instructor), 'image.png'))
 
     #Used to roll
     if message.content.startswith('$$gamble'):
@@ -88,10 +90,6 @@ async def on_reaction_add(reaction, user):
     #Too Slow
     if reaction.count > 1:
         await reaction.message.channel.send(f"You're too slow {mention}, someone beat you to it")
-
-    elif time_difference > timedelta(seconds=10):
-        mention = user.mention
-        await reaction.message.channel.send(f"You're too slow {mention}, you missed the 10 second window mark and reacted to the message in: " + str(time_difference))
 
     else:
         print("Here")
