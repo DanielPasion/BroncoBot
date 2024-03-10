@@ -79,7 +79,17 @@ def lookup_instructor_by_id(id):
 #Looks up instructor for the $$instructor command
 def eligible_to_roll(discordusername, discordserver):
     # Connecting to DB
-    cursor = mydb.cursor()
+    alternate = mysql.connector.connect(
+        host = "broncobot.clklywpfer6l.us-east-2.rds.amazonaws.com",
+        user = "admin",
+        password = PASSWORD
+    )
+    mydb2 = mysql.connector.connect(
+        host = "broncobot.clklywpfer6l.us-east-2.rds.amazonaws.com",
+        user = "admin",
+        password = PASSWORD
+    )
+    cursor = mydb2.cursor()
     cursor.execute("USE BroncoBot")
     # Creating Query
     query = "SELECT * FROM Rolls WHERE discordusername = '" + discordusername + "' and discordserver = " + str(discordserver)
@@ -93,21 +103,23 @@ def eligible_to_roll(discordusername, discordserver):
         insert = "INSERT INTO Rolls (discordusername, discordserver, rolls) VALUES (%s, %s, %s)"
         values = (discordusername, discordserver, 0)
         cursor.execute(insert, values)
-        mydb.commit()
+        mydb2.commit()
+        mydb2.close()
         return True
-    elif result[2] == 7:
+    elif result[2] == 2:
         return False
     else:
         rolls = result[2] + 1
         update = "UPDATE Rolls SET rolls = %s WHERE discordusername = %s and discordserver = %s"
         update_values = (rolls, discordusername, discordserver)
         cursor.execute(update, update_values)
-        mydb.commit()
+        mydb2.commit()
+        mydb2.close()
         return True
     
 #Used to claim
 def claim(discordusername, discordserver, instructor):
-    # Connecting to DB
+    # Restarting the server
     cursor = mydb.cursor()
     cursor.execute("USE BroncoBot")
 

@@ -25,7 +25,7 @@ async def on_message(message):
         help_message = """Welcome to Bronco Bot! If you have any other questions, please contact .thedaniel on discord. Here are a list of commands you can do:
 
         $$help: Send a list of commands
-        $$gamble: Randomly generate an instrcutor at CPP. To claim, react to the message that was sent (7 rolls per hour, rolls reset every hour on the dot,no claim cooldown)
+        $$gamble: Randomly generate an instrcutor at CPP. To claim, react to the message that was sent (3 rolls per hour, rolls reset every hour,no claim cooldown)
         $$collection @user: Displays the collection of a user
         $$lookup 'instructor': Looks up if a specific person is in the database"""
         await message.channel.send(help_message)
@@ -50,7 +50,7 @@ async def on_message(message):
             await message.channel.send(instructordata[1].replace("\n", ""))
             await message.channel.send("Member of the " + str(instructordata[2]) + " department")
         else:
-            await message.channel.send("You have reached ur maximum rolls for the hour with 7 rolls. Next roll reset is at: (figure out how to do roll resets later)")
+            await message.channel.send("You have reached ur maximum rolls for the hour with 3 rolls. Rolls reset at the :45 minute mark every hour!")
 
     #Used to roll
     if message.content.startswith('$$collection'):
@@ -69,7 +69,7 @@ async def on_message(message):
 
         string_all_instructors = ""
         for i in all_instructors:
-            string_all_instructors = string_all_instructors.replace("\n", "") + "\n- " + i + "\n"
+            string_all_instructors +="- " + i + "\n\n"
         await message.channel.send(string_all_instructors)
 
 @client.event
