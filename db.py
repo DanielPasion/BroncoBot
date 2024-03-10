@@ -69,7 +69,6 @@ def lookup_instructor_by_id(id):
     
     #Creating Query
     query = "SELECT * FROM Instructors WHERE instructorID = " + str(id) 
-
     #Executing
     cursor.execute(query)
 
@@ -82,10 +81,8 @@ def eligible_to_roll(discordusername, discordserver):
     # Connecting to DB
     cursor = mydb.cursor()
     cursor.execute("USE BroncoBot")
-
     # Creating Query
     query = "SELECT * FROM Rolls WHERE discordusername = '" + discordusername + "' and discordserver = " + str(discordserver)
-    print(query)
     # Executing
     cursor.execute(query)
     result = cursor.fetchone()
@@ -107,4 +104,4 @@ def eligible_to_roll(discordusername, discordserver):
         cursor.execute(update, update_values)
         mydb.commit()
         return True
-
+    
