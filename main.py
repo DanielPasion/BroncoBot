@@ -26,7 +26,7 @@ async def on_message(message):
         help_message = """Welcome to Bronco Bot! If you have any other questions, please contact .thedaniel on discord. Here are a list of commands you can do:
 
         $$help: Send a list of commands
-        $$gamble: Randomly generate an instrcutor at CPP. To claim, react to the message that was sent (3 rolls per hour, rolls reset every hour,no claim cooldown)
+        $$gamble: Randomly generate an instrcutor at CPP. To claim, react to the NAME OF THE PERSON (not the image) (2 rolls per hour, rolls reset every hour,no claim cooldown)
         $$collection @user: Displays the collection of a user
         $$lookup 'instructor': Looks up if a specific person is in the database"""
         await message.channel.send(help_message)
@@ -37,8 +37,15 @@ async def on_message(message):
         instructor = ""
         for i in range(9, len(request)):
             instructor += request[i]
-        await message.channel.send(lookup_instructor_by_name(instructor))
-        await message.channel.send(file=discord.File(lookup_instructor(instructor), 'image.png'))
+        result = lookup_instructor_by_name(instructor)
+
+        if result == False:
+            await message.channel.send(instructor + " is not found in the database")
+        else:
+            await message.channel.send(instructor + " works for the " + result[0][2] + " department")
+            await message.channel.send(file=discord.File(conver_b64(result[0][3]), 'image.png'))
+            if ifclaimed(result[0][1]) != False:
+                await message.channel.send("Instructor is claimed by: " + ifclaimed(instructor)[0])
 
     #Used to roll
     if message.content.startswith('$$gamble'):
@@ -50,7 +57,13 @@ async def on_message(message):
         if eligible_to_roll(str(author), server):
             instructordata = lookup_instructor_by_id(random_number)
             await message.channel.send(instructordata[1].replace("\n", ""))
+            
             await message.channel.send("Member of the " + str(instructordata[2]) + " department")
+
+            await message.channel.send(file=discord.File(conver_b64(instructordata[3]), 'image.png'))
+
+            if ifclaimed(instructordata[1]) != False:
+                await message.channel.send("Instructor is claimed by: " + ifclaimed(instructordata[1])[0])
         else:
             await message.channel.send("You have reached ur maximum rolls for the hour with 3 rolls. Rolls reset at the :45 minute mark every hour!")
 
@@ -86,11 +99,12 @@ async def on_reaction_add(reaction, user):
     reaction_time = datetime.now().replace(tzinfo=None)
     time_difference = reaction_time-message_time
 
-    print(reaction.count)
     #Too Slow
     if reaction.count > 1:
         await reaction.message.channel.send(f"You're too slow {mention}, someone beat you to it")
 
+    elif ifclaimed(reaction.message.content) != False:
+        await reaction.message.channel.send(f"Instructor is already owned")
     else:
         print("Here")
         mention = user.mention
