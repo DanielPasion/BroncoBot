@@ -26,7 +26,7 @@ async def on_message(message):
         help_message = """Welcome to Bronco Bot! If you have any other questions, please contact .thedaniel on discord. Here are a list of commands you can do:
 
         $$help: Send a list of commands
-        $$gamble: Randomly generate an instrcutor at CPP. To claim, react to the NAME OF THE PERSON (not the image) (1 roll per hour, rolls reset every hour,no claim cooldown)
+        $$gamble: Randomly generate an instrcutor at CPP. To claim, react to the NAME OF THE PERSON (not the image) (3 rolls per hour, rolls reset every hour,no claim cooldown)
         $$collection @user: Displays the collection of a user
         $$lookup 'instructor': Looks up if a specific person is in the database"""
         await message.channel.send(help_message)
@@ -39,13 +39,13 @@ async def on_message(message):
             instructor += request[i]
         result = lookup_instructor_by_name(instructor)
 
-        if result == False:
-            await message.channel.send(instructor + " is not found in the database")
-        else:
+        try:
             await message.channel.send(instructor + " works for the " + result[0][2] + " department")
             await message.channel.send(file=discord.File(conver_b64(result[0][3]), 'image.png'))
             if ifclaimed(result[0][1]) != False:
                 await message.channel.send("Instructor is claimed by: " + ifclaimed(instructor)[0])
+        except:
+            await message.channel.send(instructor + " is not found in the database")
 
     #Used to roll
     if message.content.startswith('$$gamble'):
@@ -65,7 +65,7 @@ async def on_message(message):
             if ifclaimed(instructordata[1]) != False:
                 await message.channel.send("Instructor is claimed by: " + ifclaimed(instructordata[1])[0])
         else:
-            await message.channel.send("You have reached ur maximum rolls for the hour with 1 roll. Rolls reset at the :45 minute mark every hour!")
+            await message.channel.send("You have reached ur maximum rolls for the hour. Rolls reset at the :45 minute mark every hour!")
 
     #Used to roll
     if message.content.startswith('$$collection'):
@@ -80,7 +80,7 @@ async def on_message(message):
             if str(member.id) == str(user_id):
                 mentioneduser = member
                 await message.channel.send(f"**{member.mention}'s collection: **")
-        all_instructors = collection(str(mentioneduser))
+        all_instructors = collection(str(mentioneduser), str(server.id))
 
         string_all_instructors = ""
         for i in all_instructors:
@@ -109,7 +109,7 @@ async def on_reaction_add(reaction, user):
         print("Here")
         mention = user.mention
         claim(str(user),str(reaction.message.guild.id),str(reaction.message.content))
-        await reaction.message.channel.send(f"{mention}, you are now the proud owner of **{reaction.message.content}!!!**")
+        await reaction.message.channel.send(f"{mention}, you are now married to **{reaction.message.content}!!!**")
     
 
 

@@ -107,7 +107,7 @@ def eligible_to_roll(discordusername, discordserver):
         mydb2.commit()
         mydb2.close()
         return True
-    elif result[2] == 0:
+    elif result[2] == 2:
         return False
     else:
         rolls = result[2] + 1
@@ -138,13 +138,13 @@ def claim(discordusername, discordserver, instructor):
     return True
 
 #Used to claim
-def collection(discordusername):
+def collection(discordusername,discordserver):
     # Connecting to DB
     cursor = mydb.cursor()
     cursor.execute("USE BroncoBot")
 
     #Get the instructor ID
-    query = "SELECT instructorID FROM Claims WHERE discordusername= '" + discordusername + "'"
+    query = "SELECT instructorID FROM Claims WHERE discordserver = '" + discordserver + "' AND discordusername= '" + discordusername + "'"
     cursor.execute(query)
     result = cursor.fetchall()
 
